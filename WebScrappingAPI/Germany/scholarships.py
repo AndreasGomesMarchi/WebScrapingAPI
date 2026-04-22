@@ -35,12 +35,11 @@ REQUEST_DELAY = 1.5  # segundos entre requisições
 
 UNIVERSITIES_META = {
     "LMU Munich": {
+        "name": "Ludwig_Maximilian_University_of_Munich",
         "city": "Munich",
         "country": "Germany",
         "type": "Public Research University",
         "site": "https://www.lmu.de/en/",
-        "wikipedia_title": "Ludwig_Maximilian_University_of_Munich",
-        "the_slug": "ludwig-maximilian-university-munich",
         "climate": "invernos frios e verões amenos",
         "documents": [
             "Certified academic transcripts",
@@ -54,13 +53,12 @@ UNIVERSITIES_META = {
         ],
     },
     "TUM": {
+        "name": "Technical_University_of_Munich",
         "city": "Munich",
         "country": "Germany",
         "type": "Public Technical University",
         "site": "https://www.tum.de/en/",
-        "wikipedia_title": "Technical_University_of_Munich",
-        "the_slug": "technical-university-munich",
-        "climate": "Humid continental (Dfb) – invernos frios e verões amenos",
+        "climate": "invernos frios e verões amenos",
         "documents": [
             "Certified academic transcripts",
             "Bachelor's degree certificate",
@@ -74,13 +72,12 @@ UNIVERSITIES_META = {
         ],
     },
     "Humboldt University of Berlin": {
+        "name": "Humboldt_University_of_Berlin",
         "city": "Berlin",
         "country": "Germany",
         "type": "Public Research University",
         "site": "https://www.hu-berlin.de/en",
-        "wikipedia_title": "Humboldt_University_of_Berlin",
-        "the_slug": "humboldt-university-berlin",
-        "climate": "Humid continental (Dfb) – invernos frios, verões quentes",
+        "climate": "invernos frios, verões quentes",
         "documents": [
             "Certified academic transcripts",
             "Bachelor's degree certificate",
@@ -94,10 +91,7 @@ UNIVERSITIES_META = {
     },
 }
 
-
-# ---------------------------------------------------------------------------
 # Helpers
-# ---------------------------------------------------------------------------
 
 def get(url: str, timeout: int = 15) -> requests.Response | None:
     """Faz GET com tratamento de erros e delay."""
@@ -115,10 +109,7 @@ def clean(text: str) -> str:
     """Remove espaços extras e quebras de linha."""
     return re.sub(r"\s+", " ", text).strip()
 
-
-# ---------------------------------------------------------------------------
 # Scraping: Times Higher Education (THE) – posição internacional
-# ---------------------------------------------------------------------------
 
 def scrape_the_ranking(uni_name: str) -> str:
     """
@@ -136,7 +127,7 @@ def scrape_the_ranking(uni_name: str) -> str:
 
     soup = BeautifulSoup(resp.text, "lxml")
 
-    # THE renderiza via JS; tentamos capturar dados embutidos no HTML
+    # THE renderiza via JS; tentei capturar dados embutidos no HTML
     rank_tag = soup.find("td", {"data-ranking": True})
     if rank_tag:
         return clean(rank_tag["data-ranking"])
@@ -152,10 +143,7 @@ def scrape_the_ranking(uni_name: str) -> str:
 
     return "N/A"
 
-
-# ---------------------------------------------------------------------------
 # Scraping: DAAD UniDB – posição nacional e informações gerais
-# ---------------------------------------------------------------------------
 
 def scrape_daad_national_rank(uni_name: str) -> str:
     """
@@ -163,7 +151,7 @@ def scrape_daad_national_rank(uni_name: str) -> str:
     Como o CHE não fornece ranking numérico puro, retornamos uma referência textual.
     """
     # CHE Ranking (publicado via ZEIT Campus) não tem ranking numérico,
-    # usa grupos de desempenho. Retornamos referência baseada em dados CHE 2023/24.
+    # usa grupos de desempenho. Retorna referência baseada em dados CHE 2023/24.
     che_data = {
         "LMU Munich": "Top group (CHE 2023) – consistently ranked #1–2 nationally",
         "TUM": "Top group (CHE 2023) – consistently ranked #1–2 nationally in engineering/sciences",
@@ -171,33 +159,7 @@ def scrape_daad_national_rank(uni_name: str) -> str:
     }
     return che_data.get(uni_name, "N/A")
 
-
-# ---------------------------------------------------------------------------
-# Scraping: Wikipedia REST API – dados gerais da universidade
-# ---------------------------------------------------------------------------
-
-def scrape_wikipedia_summary(wikipedia_title: str) -> dict:
-    """
-    Usa a Wikipedia REST API (sem bloqueio de IP) para buscar o sumário da universidade.
-    Retorna dict com 'extract' e 'content_urls'.
-    """
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{wikipedia_title}"
-    resp = get(url)
-    if not resp:
-        return {}
-    try:
-        data = resp.json()
-        return {
-            "extract": data.get("extract", ""),
-            "url": data.get("content_urls", {}).get("desktop", {}).get("page", ""),
-        }
-    except Exception:
-        return {}
-
-
-# ---------------------------------------------------------------------------
 # Scraping: wttr.in – clima atual da cidade
-# ---------------------------------------------------------------------------
 
 def scrape_climate(city: str) -> str:
     """
@@ -222,13 +184,10 @@ def scrape_climate(city: str) -> str:
     except Exception:
         return "N/A"
 
-
-# ---------------------------------------------------------------------------
 # Scraping: site oficial da universidade – documentos de admissão
-# ---------------------------------------------------------------------------
 
 def scrape_admission_docs_lmu() -> list[str]:
-    """Scraping dos documentos de admissão no site oficial da LMU."""
+    #Scraping dos documentos de admissão no site oficial da LMU.
     url = "https://www.lmu.de/en/study/all-degree-programs/application-and-enrollment/international-applicants/"
     resp = get(url)
     if not resp:
@@ -252,7 +211,7 @@ def scrape_admission_docs_lmu() -> list[str]:
 
 
 def scrape_admission_docs_tum() -> list[str]:
-    """Scraping dos documentos de admissão no site oficial da TUM."""
+    #Scraping dos documentos de admissão no site oficial da TUM.
     url = "https://www.tum.de/en/studies/application/application-info/international-students"
     resp = get(url)
     if not resp:
@@ -274,7 +233,7 @@ def scrape_admission_docs_tum() -> list[str]:
 
 
 def scrape_admission_docs_humboldt() -> list[str]:
-    """Scraping dos documentos de admissão no site oficial da Humboldt."""
+    #Scraping dos documentos de admissão no site oficial da Humboldt.
     url = "https://www.hu-berlin.de/en/studies/counselling/course-catalogue/application"
     resp = get(url)
     if not resp:
@@ -301,10 +260,7 @@ DOCS_SCRAPERS = {
     "Humboldt University of Berlin": scrape_admission_docs_humboldt,
 }
 
-
-# ---------------------------------------------------------------------------
 # Função principal: scraping completo de uma universidade
-# ---------------------------------------------------------------------------
 
 def scrape_university(name: str, scholarships: list = None) -> Services.university.University:
     """
@@ -341,12 +297,6 @@ def scrape_university(name: str, scholarships: list = None) -> Services.universi
         print(f"    (site oficial indisponível – usando dados de referência)")
         docs = meta["documents"]
 
-    # 5. Resumo Wikipedia (opcional – para validação)
-    print(f"  → Resumo Wikipedia...")
-    wiki = scrape_wikipedia_summary(meta["wikipedia_title"])
-    if wiki.get("extract"):
-        print(f"    ✓ Wikipedia: {wiki['extract'][:80]}...")
-
     return Services.university.University(
         name=name,
         city=meta["city"],
@@ -360,10 +310,7 @@ def scrape_university(name: str, scholarships: list = None) -> Services.universi
         site=meta["site"],
     )
 
-
-# ---------------------------------------------------------------------------
 # Execução direta (teste)
-# ---------------------------------------------------------------------------
 
 def scrape_all_universities(scholarships_map: dict = None) -> list[Services.university.University]:
     """
