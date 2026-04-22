@@ -20,7 +20,7 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 }
 
-def get_university_data(url: str):
+def get_university_data(url: str, name: str, city: str, search_name: str, climate: str = "Temperado"):
     try:
         response = requests.get(url, headers=HEADERS, allow_redirects=True)
         # Se o site bloquear, isso vai nos dizer o porquê (ex: 403)
@@ -36,27 +36,26 @@ def get_university_data(url: str):
     soup = BeautifulSoup(response.text, 'html.parser')
     
     # Busca o título real da página para testar se o scraping funcionou
-    titulo_real = soup.title.string if soup.title else "Sem título"
+    titulo_real = soup.title.string if soup.title else name
 
 
     data = {
-        "nome": titulo_real.strip(),  # type: ignore
-        "cidade": "Toronto",
+        "nome": name,
+        "cidade": city,
         "pais": "Canadá",
         "tipo": "Pública",
         "site": url,
-        "tags": ["Research", "Top Ranked"],
         "documentos": ["Passaporte", "Histórico Escolar"],
         "bolsas_atreladas": [] 
     }
 
-    ranking = getRanking("University of Toronto")
+    ranking = getRanking(search_name)
 
     university = University(
         name=data["nome"],
         city=data["cidade"],
-        climate="Temperado",
-        nationalPosition=1,
+        climate=climate,
+        nationalPosition=1 if "Toronto" in name else (2 if "McGill" in name else "N/A"),
         internationalPosition=ranking['ranking'] if ranking else "N/A",
         documents=data["documentos"],
         type=data["tipo"],
@@ -109,12 +108,10 @@ def getRanking(university_name: str):
         print(f"Erro ao usar o Playwright: {e}")
         return None
 
-
-
 @app.get("/scrape/uoft")
 def scrape_university():
     url = "https://www.utoronto.ca/"
-    data = get_university_data(url)
+    data = get_university_data(url, "University of Toronto", "Toronto", "University of Toronto")
     
     if not data:
         raise HTTPException(status_code=404, detail="Não foi possível acessar o site ou fomos bloqueados.")

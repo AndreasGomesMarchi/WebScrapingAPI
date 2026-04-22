@@ -10,6 +10,7 @@ from Backend.Services.country import Country
 # ==============================================================================
 from WebScrappingAPI.Canada.universityScrapper import get_university_data as get_canada_university
 from WebScrappingAPI.Canada.countryCanada import canada as canada_country
+from WebScrappingAPI.Canada.scholarshipsCanada import get_scholarships_canada
 # from WebScrappingAPI.EUA.universityScrapper import get_usa_data
 # from WebScrappingAPI.Europa.universityScrapper import get_europe_data
 
@@ -24,20 +25,43 @@ def build_canada_data():
     """Constrói o objeto do Canadá e aciona todos os seus scrapers de universidades."""
     
     universities = []
+    scholarships = []
+    
+    # Scrapers de bolsas do Canadá
+    try:
+        canada_scholarships = get_scholarships_canada()
+        scholarships = [vars(s) for s in canada_scholarships]
+    except Exception as e:
+        print(f"Erro ao raspar dados de bolsas (Canadá): {e}")
     
     # Scrapers do Canadá
     try:
-        uoft = get_canada_university("https://www.utoronto.ca/")
+        uoft = get_canada_university("https://www.utoronto.ca/", "University of Toronto", "Toronto", "University of Toronto")
         if uoft:
             universities.append(uoft.__dict__)
     except Exception as e:
         print(f"Erro ao raspar dados da UofT (Canadá): {e}")
 
-    # Outras universidades do Canadá no futuro:
-    # mcgill = get_mcgill_university() ...
+    try:
+        ocad = get_canada_university("https://www.ocadu.ca/", "OCAD University", "Toronto", "OCAD University")
+        if ocad:
+            universities.append(ocad.__dict__)
+    except Exception as e:
+        print(f"Erro ao raspar dados da OCAD (Canadá): {e}")
+
+    try:
+        mcgill = get_canada_university("https://www.mcgill.ca/", "McGill University", "Montreal", "McGill University", climate="Frio Extremo")
+        if mcgill:
+            universities.append(mcgill.__dict__)
+    except Exception as e:
+        print(f"Erro ao raspar dados da McGill (Canadá): {e}")
+
+    
+    canada_data = canada_country.__dict__.copy()
+    canada_data["scholarships"] = scholarships
     
     return {
-        "country":  canada_country.__dict__,
+        "country":  canada_data,
         "universities": universities
     }
 
