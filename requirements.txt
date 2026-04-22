@@ -1,5 +1,5 @@
 # Framework Web e Servidor
-fastapi
+fastapi[standard]
 uvicorn[standard]
 
 # Web Scraping
@@ -7,6 +7,5 @@ beautifulsoup4
 requests
 lxml
 html5lib
-
-# Opcional: Processamento de dados
-pandas
+httpx
+playwright

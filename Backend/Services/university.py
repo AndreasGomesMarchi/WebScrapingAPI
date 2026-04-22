@@ -1,9 +1,7 @@
-
 class University:
-    def __init__(self, name, city, country, climate, nationalPosition, internationalPosition, documents, type, scholarships, site):
+    def __init__(self, name, city, climate, nationalPosition, internationalPosition, documents, type, scholarships, site):
         self.name = name
         self.city = city
-        self.country = country
         self.climate = climate
         self.nationalPosition = nationalPosition
         self.internationalPosition = internationalPosition
@@ -13,4 +11,4 @@ class University:
         self.site = site
 
     def __str__(self) -> str:
-        return f"University(name={self.name}, city={self.city}, country={self.country}, climate={self.climate}, nationalPosition={self.nationalPosition}, internationalPosition={self.internationalPosition}, documents={self.documents}, type={self.type}, scholarships={self.scholarships}, site={self.site})"
+        return f"University(name={self.name}, city={self.city}, climate={self.climate}, nationalPosition={self.nationalPosition}, internationalPosition={self.internationalPosition}, documents={self.documents}, type={self.type}, scholarships={self.scholarships}, site={self.site})"
