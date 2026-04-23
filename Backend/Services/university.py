@@ -1,5 +1,5 @@
 class University:
-    def __init__(self, name, city, climate, nationalPosition, internationalPosition, documents, type, scholarships, site):
+    def __init__(self, name, city, climate, nationalPosition, internationalPosition, documents, type, scholarships, site, acceptanceRate):
         self.name = name
         self.city = city
         self.climate = climate
@@ -8,6 +8,7 @@ class University:
         self.documents = documents
         self.type = type
         self.scholarships = scholarships
+        self.acceptanceRate = acceptanceRate
         self.site = site
 
     def __str__(self) -> str:
