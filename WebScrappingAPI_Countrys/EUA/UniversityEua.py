@@ -41,8 +41,8 @@ UNIVERSITIES_META = {
         "internationalPosition": 1,
         "documents": ["High school transcript", "SAT or ACT scores", "Letters of recommendation"],
         "type": "Private Research University",
+        "acceptanceRate": 0.04,
         "site": "https://web.mit.edu",
-        "acceptanceRate": 0.04
     },
     "Harvard": {
         "name": "Harvard University",
@@ -52,8 +52,8 @@ UNIVERSITIES_META = {
         "internationalPosition": 2,
         "documents": ["School Report", "SAT or ACT scores", "Teacher evaluations"],
         "type": "Private Research University",
+        "acceptanceRate": 0.03,
         "site": "https://www.harvard.edu",
-        "acceptanceRate": 0.03
     },
     "Stanford": {
         "name": "Stanford University",
@@ -63,8 +63,8 @@ UNIVERSITIES_META = {
         "internationalPosition": 3,
         "documents": ["Official transcript", "Letters of recommendation", "SAT or ACT scores"],
         "type": "Private Research University",
+        "acceptanceRate": 0.045,  
         "site": "https://www.stanford.edu",
-        "acceptanceRate": 0.045  
     }
 }
 
@@ -162,7 +162,7 @@ def scrape_university(key: str) -> university_service.University:
     print(f"{uni.climate}")
     print(f"{uni.nationalPosition}")
     print(f"{uni.internationalPosition}")
-    print(f"{uni.acceptanceRate * 100} %")
+    print(f"{uni.acceptanceRate * 100}%")
     print(f"{uni.type}")
     print(f"{', '.join(uni.documents[:3])}")
     print(f"{uni.site}")
