@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
-        "./Backend"
+        "./Backend",
+        "./WebScrappingAPI_Countrys",
+        "./WebScrapingAPI_Countrys"
     ]
 }

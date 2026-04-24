@@ -1,0 +1,3 @@
+Parte valores: pegar apenas o valor usando regex;
+Pegar apenas data com regex;
+Traduzir para português;

@@ -152,6 +152,7 @@ def scrape_germany_university(key: str) -> university_service.University:
 
     # PINTANDO OS DADOS NO TERMINAL
     print(f"\nDADOS CONSOLIDADOS:")
+    print(f"{uni.name}")
     print(f"{uni.city}")
     print(f"{uni.climate}")
     print(f"Nacional: {uni.nationalPosition}")
